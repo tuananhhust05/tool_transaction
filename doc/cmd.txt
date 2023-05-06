@@ -1,0 +1,4 @@
+python initData.py
+python index.py 
+python test_scheduler.py 
+python test_result.py

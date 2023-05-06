@@ -1,0 +1,13 @@
+requirement:
+
+  atm: 2p sau khi khởi tạo => settled 
+  credit: 6p sau khi khởi tạo => settled 
+  except: 6,0 ( phép %) 
+
+5000 records(status:"pending"): 
+   4000 records (type:ATM_CARD)
+       a = minutes% 7
+       a in range (0-6)
+   1000 records (type:CREDIT_CARD):
+       a = minutes% 7
+       a in range (0-6)

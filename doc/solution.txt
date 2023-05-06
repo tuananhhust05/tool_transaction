@@ -1,0 +1,3 @@
+
+- Đọc cả bảng => xét từng phần tử, lấy ra thời gian => xác định thời gian thực hiện tác vụ (lưu vào base)
+=> lên lịch thực hiện 

@@ -1,0 +1,13 @@
+
+1. delete Data in table 
+2. insertData: 
+   + Xác định thời điểm transaction được insert vào base 
+        - Lấy thời điểm hiện tại 
+        - Xác định khoảng phút tiếp theo (1-7,8-14,15-21,....,50-56): nếu rơi vào khoảng 57-60 thì đẩy lên khoảng 1-7
+   + Chạy vòng for để insert 
+3. Chạy tool lên lịch 
+4. Chạy tool test_pre để kiểm tra độ chính xác của thời điểm chuyển 
+5. Đợi cho đến khi các lịch được thực hiện xong. Chạy tool test_result để kiểm tra độ chính xác. 
+
+Lưu ý: tất cả giờ phải được chuyển 
+   

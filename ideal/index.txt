@@ -1,0 +1,9 @@
+1.Insert dữ liệu khi chuyển vào database, viết tool đánh giá độ chính xác 
+  - cấu trúc bảng: 
+      + Id 
+      + Thời gian giao dịch được insert 
+      + Thời gian chuyển đổi 
+  - Viết tool đánh giá độ chính xác. 
+  
+2.Cấu trúc thành 1 fastapi, ngay khi 1 transaction được thêm vào thì chạy apscheduler 
+

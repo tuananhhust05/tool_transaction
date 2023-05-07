@@ -2,27 +2,42 @@ from connections.index import ConnectToBase
 from models.transaction import Transaction
 import datetime
 from apscheduler.schedulers.background import BlockingScheduler
- 
+
+import pymysql
+from models.transaction import Transaction
+import mysql 
+
 sched = BlockingScheduler(timezone="Asia/Bangkok")
 # Thứ 7 và chủ nhật không chuyển 
 # Không chuyển vào số phút chia 7 dư 6 và chia hết cho 1 => cách từ 2 đến 4 phút 
-connection = ConnectToBase()
-cursor = connection.cursor()
+db = mysql.connector.connect(pool_name="ecom",pool_size=10,pool_reset_session=True,host='localhost',database='ecom',user='root',password='123456')
 
-def ChangeStatus(obj,time,con,cur):
+def ChangeStatus(obj,time):
+
+    print("Change Status")
+    db2 = mysql.connector.connect(pool_name='ecom')
+    print("Connection db:", db2.connection_id)
+    cursor2 = db2.cursor()
     print('ChangeStatus')
-    # cursor.execute("UPDATE ecom.transaction SET  status ='settled' WHERE id = " + str(obj.id))
-    # connection.commit()
+    cursor2.execute("UPDATE ecom.transaction SET  status ='settled' WHERE id = " + str(a))
+    db2.commit()
 
-    # sql = "INSERT INTO ecom.result (id,created_at,time_change,type) VALUES (" +str(obj.id)+",'" +str(obj.created_at)+ "','" +str(time)+ "','"+ str(obj.type) +"')"
-    # cur.execute(sql)
-    # con.commit()
+    cursor2.execute("UPDATE ecom.transaction SET  status ='settled' WHERE id = " + str(obj.id))
+    db2.commit()
+    sql = "INSERT INTO ecom.result (id,created_at,time_change,type) VALUES (" +str(obj.id)+",'" +str(obj.created_at)+ "','" +str(time)+ "','"+ str(obj.type) +"')"
+
+    cursor2.execute(sql)
+    db2.commit()
+    cursor2.close()
+    db2.close()
     print("updated",obj.id)
 
 
 def StartToolChangeStatusTransaction():
-
+    connection = ConnectToBase()
+    cursor = connection.cursor()
     cursor.execute("DELETE FROM ecom.plan")
+    cursor.execute("DELETE FROM ecom.result")
     connection.commit()
     print("Deleted test")
 
@@ -45,7 +60,7 @@ def StartToolChangeStatusTransaction():
            connection.commit()
            print("Inserted plan",obj.id)
            # schedule
-           sched.add_job(ChangeStatus, 'date', run_date=time, args=[obj,time,connection,cursor])
+           sched.add_job(ChangeStatus, 'date', run_date=time, args=[obj,time])
             
         if(obj.type == "CREDIT_CARD"):
             time_add = 6
@@ -58,7 +73,7 @@ def StartToolChangeStatusTransaction():
             print("Inserted plan",obj.id)
             
             # schedule
-            sched.add_job(ChangeStatus, 'date', run_date=time, args=[obj,time,connection,cursor])
+            sched.add_job(ChangeStatus, 'date', run_date=time, args=[obj,time])
     sched.start()
             
 

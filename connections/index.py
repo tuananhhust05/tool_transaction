@@ -3,7 +3,7 @@ from mysql.connector import pooling
 from models.transaction import Transaction
 connection_pool = pooling.MySQLConnectionPool(    
                                                   pool_name="ecom",
-                                                  pool_size=5,
+                                                  pool_size=32,
                                                   pool_reset_session=True,
                                                   host='localhost',
                                                   database='ecom',

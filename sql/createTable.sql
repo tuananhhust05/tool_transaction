@@ -19,3 +19,12 @@ CREATE TABLE `ecom`.`plan` (
   `type` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE);
+
+CREATE TABLE `ecom`.`result` (
+  `id` INT NOT NULL,
+  `created_at` DATETIME NOT NULL,
+  `time_change` DATETIME NOT NULL,
+  `type` VARCHAR(45) NOT NULL,
+  `time_current` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE);

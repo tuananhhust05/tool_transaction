@@ -1,0 +1,4 @@
+Tập hợp số thứ tự có thể có: [0,1,2,3,4,5,6]
+1 chu kỳ có 7 phút: 
+  - thứ tự mỗi phút sẽ được xác định thông qua phép chia cho 7 lấy dư
+  - bỏ qua số thứ tựu 0, 6 khi xác định thời điểm chuyển trạng thái 

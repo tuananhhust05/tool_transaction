@@ -18,6 +18,8 @@ def ChooseTime():
     current = datetime.datetime.now()
     minute = VerifyMinuteSet()
     time_choose = current.replace(minute=minute, hour=current.hour, second=random.randint(0,59), year=current.year, month=current.month, day=current.day)
+    millis = random.randint(0,59)
+    time_choose = time_choose + datetime.timedelta(milliseconds=millis)
     if(minute <8):
         time_choose = time_choose + datetime.timedelta(hours=1)
     return time_choose

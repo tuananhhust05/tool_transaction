@@ -16,6 +16,7 @@ def updateMiss():
     db3 = mysql.connector.connect(pool_name='ecom')
     print("Connection db:", db3.connection_id)
     cursor3 = db3.cursor()
+
     sql2 = "SELECT * FROM ecom.transaction WHERE id IN (SELECT id FROM ecom.plan WHERE time_change < '"+ str(current) +"') AND status='pending'"
     cursor3.execute(sql2)
     transactions = cursor3.fetchall()
@@ -25,9 +26,10 @@ def updateMiss():
         db3.commit()
         new_obj = Transaction(e[0],e[1],e[2],e[3],e[4],e[5],e[6],e[7],e[8],e[9])
         print(new_obj)
-        # sql = "INSERT INTO ecom.result (id,created_at,time_change,type,time_current) VALUES (" +str(new_obj.id)+",'" +str(new_obj.created_at)+ "','" +str(current)+ "','"+ str(new_obj.type) +"','"+ str(current) +"')"
-        # cursor3.execute(sql)
-        # db3.commit()
+        
+        sql = "INSERT INTO ecom.result (id,created_at,time_change,type,time_current) VALUES (" +str(new_obj.id)+",'" +str(new_obj.created_at)+ "','" +str(current)+ "','"+ str(new_obj.type) +"','"+ str(current) +"')"
+        cursor3.execute(sql)
+        db3.commit()
     cursor3.close()
     db3.close()
 

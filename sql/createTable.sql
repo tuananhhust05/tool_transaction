@@ -28,3 +28,4 @@ CREATE TABLE `ecom`.`result` (
   `time_current` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE);
+

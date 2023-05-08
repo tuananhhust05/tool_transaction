@@ -3,18 +3,26 @@ from mysql.connector import pooling
 from apscheduler.schedulers.background import BlockingScheduler
 import random
 import mysql
-from models.transaction import Transaction
-import datetime
 sched = BlockingScheduler(timezone="Asia/Bangkok")
-current = datetime.datetime.now()
+
 db1 = mysql.connector.connect(pool_name="ecom",pool_size=10,pool_reset_session=True,host='localhost',database='ecom',user='root',password='123456')
 cursor = db1.cursor()
-sql = "SELECT * FROM ecom.transaction WHERE id IN (SELECT id FROM ecom.plan WHERE time_change < '"+ str(current) +"') AND status='pending'"
-print(sql)
-cursor.execute(sql)
-transactions = cursor.fetchall()
-print(len(transactions))
-# transaction_dict = []
-# for e in transaction:
-#         transaction_dict.append(Transaction(e[0],e[1],e[2],e[3],e[4],e[5],e[6],e[7],e[8],e[9]))
+def ChangeStatus():
+   print("Change Status")
+   #print(connection_pool.__dict__)
+   db2 = mysql.connector.connect(pool_name='ecom')
+   print("Connection db2:", db2.connection_id)
+   
+   cursor = db2.cursor()
+   print('ChangeStatus')
+   a = random.randint(10,499)
+   cursor.execute("UPDATE ecom.transaction SET  status ='settled' WHERE id = " + str(a))
+   db2.commit()
 
+   cursor.close()
+   db2.close()
+   print("updated",a)
+
+sched.add_job(ChangeStatus, 'interval', seconds=0.01)
+            
+sched.start()

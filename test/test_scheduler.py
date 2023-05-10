@@ -8,13 +8,13 @@ def StartTestPlan():
     connection = ConnectToBase()
     cursor = connection.cursor()
 
-    cursor.execute("SELECT * FROM ecom.transaction")
+    cursor.execute("SELECT * FROM defaultdb.settlement")
     record_transaction = cursor.fetchall()
     record_transaction_dict = []
     for e in record_transaction:
-        record_transaction_dict.append(Transaction(e[0],e[1],e[2],e[3],e[4],e[5],e[6],e[7],e[8],e[9]))
+        record_transaction_dict.append(Transaction(e[0],e[1],e[2],e[3],e[4],e[5],e[6],e[7],e[8],e[9],e[10]))
     
-    cursor.execute("SELECT * FROM ecom.plan")
+    cursor.execute("SELECT * FROM defaultdb.plan")
     record_plan = cursor.fetchall()
     record_plan_dict = []
     for e in record_plan:

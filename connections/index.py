@@ -2,13 +2,14 @@ from mysql.connector import Error
 from mysql.connector import pooling
 from models.transaction import Transaction
 connection_pool = pooling.MySQLConnectionPool(    
-                                                  pool_name="ecom",
+                                                  pool_name="defaultdb",
                                                   pool_size=32,
                                                   pool_reset_session=True,
-                                                  host='localhost',
-                                                  database='ecom',
-                                                  user='root',
-                                                  password='123456'
+                                                  host='transaction-settelement-do-user-14024736-0.b.db.ondigitalocean.com',
+                                                  port = 25060,
+                                                  database='defaultdb',
+                                                  user='doadmin',
+                                                  password='AVNS_1idCLtitiPObeaO1A5s'
                                             )
 
 connection_object = connection_pool.get_connection()

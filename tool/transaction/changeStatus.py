@@ -13,7 +13,6 @@ sched = BlockingScheduler(timezone="Asia/Bangkok")
 db = mysql.connector.connect(pool_name="ecom",pool_size=10,pool_reset_session=True,host='localhost',database='ecom',user='root',password='123456')
 
 def ChangeStatus(obj,time):
-
     print("Change Status")
     db2 = mysql.connector.connect(pool_name='ecom')
     print("Connection db:", db2.connection_id)
@@ -25,7 +24,7 @@ def ChangeStatus(obj,time):
     cursor2.execute("UPDATE ecom.transaction SET  status ='settled' WHERE id = " + str(obj.id))
     db2.commit()
     sql = "INSERT INTO ecom.result (id,created_at,time_change,type) VALUES (" +str(obj.id)+",'" +str(obj.created_at)+ "','" +str(time)+ "','"+ str(obj.type) +"')"
-
+    
     cursor2.execute(sql)
     db2.commit()
     cursor2.close()

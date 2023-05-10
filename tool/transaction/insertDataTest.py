@@ -6,7 +6,7 @@ connection = ConnectToBase()
 def VerifyMinuteSet():
     currentDateAndTime = datetime.datetime.now() # Đúng giờ GMT +7 
     currentminute= currentDateAndTime.minute
-    startminute = ((currentminute//7) +1) * 7 +1 
+    startminute = ((currentminute//7) +1) * 7 + 3
     endminute = startminute + 6
     if(endminute >59):
         startminute = 1
@@ -27,15 +27,17 @@ def ChooseTime():
 def InsertTransaction():
     cursor = connection.cursor()
     for i in range(4000):
-        time = ChooseTime()
-        sql = "INSERT INTO ecom.transaction (id,creator_id,amount,fee,type,status,created_by,created_at,updated_by,updated_at) VALUES (" +str(i)+",1,1,1,'ATM_CARD','pending',1,'" +str(time)+ "',1,'" +str(time)+ "')"
+        time = ChooseTime() 
+        time = time + datetime.timedelta(days=-1)         
+        sql = "INSERT INTO defaultdb.settlement (status,amount,fee_settlement,fee_refund,received_amount,settle_date,created_date,creator_id,stripe_id,type) VALUES ('pending',1,1,1,1,'" +str(time)+ "','" +str(time)+ "',1,1,'ATM_CARD')"
         cursor.execute(sql)
         connection.commit()
         print("Ineserted",i)
     for i in range(1000):
         i = 4000 + i
         time = ChooseTime()
-        sql = "INSERT INTO ecom.transaction (id,creator_id,amount,fee,type,status,created_by,created_at,updated_by,updated_at) VALUES (" +str(i)+",1,1,1,'CREDIT_CARD','pending',1,'" +str(time)+ "',1,'" +str(time)+ "')"
+        time = time + datetime.timedelta(days=-2) 
+        sql = "INSERT INTO defaultdb.settlement (status,amount,fee_settlement,fee_refund,received_amount,settle_date,created_date,creator_id,stripe_id,type) VALUES ('pending',1,1,1,1,'" +str(time)+ "','" +str(time)+ "',1,1,'CREDIT_CARD')"
         cursor.execute(sql)
         connection.commit()
         print("Ineserted",i)

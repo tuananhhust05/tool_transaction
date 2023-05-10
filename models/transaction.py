@@ -1,16 +1,16 @@
 
 class Transaction:
-    def __init__ (self, id,creator_id,amount,fee,type,status,created_by,created_at,updated_by,updated_at):
+    def __init__ (self, id,status,amount,fee_settlement,fee_refund,received_amount,settle_date,created_date,creator_id,stripe_id,type):
         self.id = id
-        self.creator_id = creator_id
-        self.amount = amount
-        self.fee = fee
-        self.type = type
         self.status = status
-        self.created_by = created_by
-        self.created_at = created_at
-        self.updated_by = updated_by
-        self.updated_at = updated_at
-        
+        self.amount = amount
+        self.fee_settlement = fee_settlement
+        self.fee_refund = fee_refund
+        self.received_amount = received_amount
+        self.settle_date = settle_date
+        self.created_date = created_date
+        self.creator_id = creator_id
+        self.stripe_id = stripe_id
+        self.type = type 
 
 

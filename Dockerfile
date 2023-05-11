@@ -1,7 +1,7 @@
-FROM python:3.10
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install  -r requirements.txt
-COPY . .
-EXPOSE 8080
-CMD [ "python", "./index.py" ]
+FROM python:3.8.10
+
+ADD  index.py . 
+
+RUN pip3 install apscheduler mysql-connector-python redis==3.5.3 python-dotenv
+
+CMD ["python3","./index.py"]

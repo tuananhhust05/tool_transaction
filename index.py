@@ -1,27 +1,51 @@
-from connections.index import ConnectToBase
-from models.transaction import Transaction
+import mysql.connector
 import datetime
 from datetime import date
 from apscheduler.schedulers.background import BlockingScheduler
-from models.transaction import Transaction
 import mysql 
 import redis
 from datetime import date
-sched = BlockingScheduler(timezone="Asia/Ho_Chi_Minh")
 
+# env 
+import os
+from dotenv import load_dotenv
+load_dotenv()
+host = os.environ.get('HOST')
+print(host)
+
+
+sched = BlockingScheduler(timezone="Asia/Ho_Chi_Minh")
 db = mysql.connector.connect(                     
-                                pool_name="defaultdb",
-                                pool_size=32,
-                                pool_reset_session=True,
-                                host='transaction-settelement-do-user-14024736-0.b.db.ondigitalocean.com',
-                                port = 25060,
-                                database='defaultdb',
-                                user='doadmin',
-                                password='AVNS_1idCLtitiPObeaO1A5s'
+                                pool_name=os.environ.get('pool_name'),
+                                pool_size=int(os.environ.get('pool_size')),
+                                pool_reset_session=bool(os.environ.get('pool_reset_session')),
+                                host=os.environ.get('host'),
+                                port = int(os.environ.get('port')),
+                                database=os.environ.get('database'),
+                                user=os.environ.get('user'),
+                                password=os.environ.get('password')
                             )
 print("Init connection")
 
 r = redis.Redis(host='localhost', port=6379, db=1)
+print('Conneced redis')
+
+class Transaction:
+    def __init__ (self, id,status,amount,fee_settlement,fee_refund,received_amount,settle_date,created_date,creator_id,stripe_id,type):
+        self.id = id
+        self.status = status
+        self.amount = amount
+        self.fee_settlement = fee_settlement
+        self.fee_refund = fee_refund
+        self.received_amount = received_amount
+        self.settle_date = settle_date
+        self.created_date = created_date
+        self.creator_id = creator_id
+        self.stripe_id = stripe_id
+        self.type = type 
+
+day_atm = int(os.environ.get('day_atm'))
+day_credit = int(os.environ.get('day_credit'))
 
 def StartToolChangeStatusTransaction():
     today = date.today()
@@ -41,7 +65,7 @@ def StartToolChangeStatusTransaction():
             created_at = obj.created_date 
 
             if (obj.type == "ATM_CARD"):
-                time = created_at + datetime.timedelta(days=1)
+                time = created_at + datetime.timedelta(days=day_atm)
                 sql = "INSERT INTO defaultdb.plan (id,created_date,time_change,type) VALUES (" +str(obj.id)+",'" +str(created_at)+ "','" +str(time)+ "','ATM_CARD')"
                 cursor.execute(sql)
                 connection.commit()
@@ -52,7 +76,7 @@ def StartToolChangeStatusTransaction():
                    r.set(str(obj.id), 'True') 
                 
             if(obj.type == "CREDIT_CARD"):
-                time = created_at + datetime.timedelta(days=2)
+                time = created_at + datetime.timedelta(days=day_credit)
                 sql = "INSERT INTO defaultdb.plan (id,created_date,time_change,type) VALUES (" +str(obj.id)+",'" +str(created_at)+ "','" +str(time)+ "','CREDIT_CARD')"
                 cursor.execute(sql)
                 connection.commit()
@@ -77,7 +101,7 @@ def updateMiss():
 
             if (obj.type == "ATM_CARD"):
                 if(r.get(str(obj.id)) == None):
-                    time = created_at + datetime.timedelta(days=1)
+                    time = created_at + datetime.timedelta(days=day_atm)
                     if(time.day == datetime.datetime.now().day):
                         if(obj.status == 'pending'):
                                 cursor.execute("UPDATE defaultdb.settlement SET  status ='settled', settle_date='"+ str(time)+"' WHERE id = " + str(obj.id))
@@ -87,7 +111,7 @@ def updateMiss():
                 
             if(obj.type == "CREDIT_CARD"):
                 if(r.get(str(obj.id)) == None):
-                    time = created_at + datetime.timedelta(days=1)
+                    time = created_at + datetime.timedelta(days=day_credit)
                     if(time.day == datetime.datetime.now().day):
                         if(obj.status == 'pending'):
                                 cursor.execute("UPDATE defaultdb.settlement SET  status ='settled', settle_date='"+ str(time)+"' WHERE id = " + str(obj.id))
@@ -96,9 +120,10 @@ def updateMiss():
                 r.delete(str(obj.id)) 
     cursor.close()
     connection.close()
-sched.add_job(StartToolChangeStatusTransaction, 'cron', hour= 6, minute= '10')
+sched.add_job(StartToolChangeStatusTransaction, 'cron', hour= 21, minute= '21')
 sched.add_job(updateMiss, 'cron', hour= 17, minute= '15')
 sched.start()
+
 
 
 
